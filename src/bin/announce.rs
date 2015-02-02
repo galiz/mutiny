@@ -1,5 +1,5 @@
 extern crate wrecking_ball;
 
 fn main() {
-    wrecking_ball::announce("Test the announce() function");
+    wrecking_ball::start("Test the announce() function");
 }

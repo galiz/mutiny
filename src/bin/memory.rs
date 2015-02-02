@@ -1,11 +1,11 @@
-#![allow(unstable)]
+#![feature(io)]
 
 extern crate wrecking_ball;
 
-use std::io;
+use std::old_io as io;
 
 fn main() {
-    wrecking_ball::announce("Consume memory and wait to be killed");
+    wrecking_ball::start("Consume memory and wait to be killed");
 
     let mut vec = Vec::new();
 
