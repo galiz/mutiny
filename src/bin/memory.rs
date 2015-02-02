@@ -1,11 +1,11 @@
 #![allow(unstable)]
 
-extern crate libc;
+extern crate wrecking_ball;
 
 use std::io;
 
 fn main() {
-    unsafe { println!("{}", libc::getpid()); }
+    wrecking_ball::announce("Consume memory and wait to be killed");
 
     let mut vec = Vec::new();
 

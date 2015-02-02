@@ -3,5 +3,14 @@ name = "rust-wrecking-ball"
 version = "0.0.1"
 authors = ["Sam Clements <sam@borntyping.co.uk>"]
 
+[lib]
+name = "wrecking_ball"
+
 [[bin]]
-name = 'memory'
+name = "memory"
+
+[[bin]]
+name = "announce"
+
+[dependencies]
+libc = "0.1"
