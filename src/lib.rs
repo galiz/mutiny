@@ -5,7 +5,6 @@
 extern crate term;
 extern crate psutil;
 
-use std::old_io::File;
 use std::os;
 
 /// Creates a pidfile from a name and returns it's path path
