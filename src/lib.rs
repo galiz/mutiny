@@ -34,7 +34,7 @@ macro_rules! print_meta(
 /// Announce some information about the current program, and create a pidfile
 pub fn start(description: &str) {
     let path = pidfile_path(os::args()[0].clone());
-    psutil::pidfile::write_pidfile(&path);
+    psutil::pidfile::write_pidfile(&path).unwrap();
 
     print_meta!("Description", description);
     print_meta!("Pidfile", path.display());
