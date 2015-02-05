@@ -13,5 +13,5 @@ name = "memory"
 name = "announce"
 
 [dependencies]
-libc = "0.1"
-term = "0.1.10"
+term = "0.1"
+psutil = "0.2"
