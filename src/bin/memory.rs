@@ -1,3 +1,4 @@
+#![feature(core)]
 #![feature(io)]
 
 extern crate wrecking_ball;

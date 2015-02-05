@@ -8,17 +8,11 @@ extern crate psutil;
 use std::old_io::File;
 use std::os;
 
-/// Writes the PID of the current process to a file
-pub fn pidfile(path: &Path) {
-    write!(&mut File::create(path).unwrap(), "{}", psutil::getpid()).unwrap();
-}
-
 /// Creates a pidfile from a name and returns it's path path
-pub fn pidfile_for(name: String) -> Path {
+pub fn pidfile_path(name: String) -> Path {
     let mut path = Path::new(name);
     path.set_extension("pid");
     path = os::make_absolute(&path).unwrap();
-    pidfile(&path.clone());
     return path;
 }
 
@@ -40,9 +34,9 @@ macro_rules! print_meta(
 
 /// Announce some information about the current program, and create a pidfile
 pub fn start(description: &str) {
-    let path = pidfile_for(os::args()[0].clone());
+    let path = pidfile_path(os::args()[0].clone());
+    psutil::pidfile::write_pidfile(&path);
 
-    // Announce information about the program
     print_meta!("Description", description);
     print_meta!("Pidfile", path.display());
     print_meta!("PID", psutil::getpid());
