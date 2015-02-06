@@ -14,4 +14,6 @@ name = "announce"
 
 [dependencies]
 term = "0.1"
-psutil = "0.2"
+
+[dependencies.psutil]
+git = "https://github.com/borntyping/rust-psutil"
