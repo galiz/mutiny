@@ -3,7 +3,14 @@ rust-wrecking-ball
 
 Some simple tools that can be used to test process monitoring systems.
 
-* `cargo run --bin memory` will eat some memory and wait for input.
+* `memory` will eat some memory and wait for input.
+
+Usage
+-----
+
+```bash
+cargo run --bin memory -- -p memory.pid
+```
 
 Licence
 -------
