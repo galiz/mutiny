@@ -1,16 +1,18 @@
 [package]
-name = "rust-mutiny"
+name = "mutiny"
 version = "0.0.1"
 authors = ["Sam Clements <sam@borntyping.co.uk>"]
 
 [lib]
-name = "wrecking_ball"
+name = "mutiny"
 
 [[bin]]
-name = "memory"
+name = "mutiny-memory"
+path = "src/bin/memory.rs"
 
 [[bin]]
-name = "announce"
+name = "mutiny-announce"
+path = "src/bin/mutiny-announce.rs"
 
 [dependencies]
 getopts = "0.2"

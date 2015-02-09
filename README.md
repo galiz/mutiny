@@ -1,5 +1,5 @@
-rust-mutiny
-===========
+mutiny
+======
 
 Some simple tools that can be used to test process monitoring systems.
 
@@ -15,7 +15,7 @@ cargo run --bin memory -- -p memory.pid
 Licence
 -------
 
-`rust-mutiny` is licenced under the [MIT Licence](http://opensource.org/licenses/MIT).
+`mutiny` is licenced under the [MIT Licence](http://opensource.org/licenses/MIT).
 
 Authors
 -------
