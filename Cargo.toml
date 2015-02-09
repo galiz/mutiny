@@ -1,5 +1,5 @@
 [package]
-name = "rust-wrecking-ball"
+name = "rust-mutiny"
 version = "0.0.1"
 authors = ["Sam Clements <sam@borntyping.co.uk>"]
 
