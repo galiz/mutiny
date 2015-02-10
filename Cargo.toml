@@ -12,7 +12,7 @@ path = "src/bin/memory.rs"
 
 [[bin]]
 name = "mutiny-announce"
-path = "src/bin/mutiny-announce.rs"
+path = "src/bin/announce.rs"
 
 [dependencies]
 getopts = "0.2"

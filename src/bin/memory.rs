@@ -2,14 +2,14 @@
 #![feature(io)]
 #![feature(std_misc)]
 
-extern crate wrecking_ball;
+extern crate mutiny;
 
 use std::old_io as io;
 use std::old_io::timer::Timer;
 use std::time::duration::Duration;
 
 fn main() {
-    wrecking_ball::start("Consume memory and wait to be killed");
+    mutiny::start("Consume memory and wait to be killed");
 
     let mut vec = Vec::new();
     let mut timer = Timer::new().unwrap();

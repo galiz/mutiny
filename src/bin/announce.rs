@@ -1,5 +1,5 @@
-extern crate wrecking_ball;
+extern crate mutiny;
 
 fn main() {
-    wrecking_ball::start("Test the announce() function");
+    mutiny::start("Test the announce() function");
 }

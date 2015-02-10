@@ -9,19 +9,10 @@ extern crate getopts;
 extern crate term;
 extern crate psutil;
 
-/// Prints a name and description in the same way cargo does
-fn print_meta(name: &str, description: String) {
-    let mut terminal = term::stdout().unwrap();
-    terminal.fg(term::color::GREEN).unwrap();
-    write!(terminal, "{:>12} ", name).unwrap();
-    terminal.reset().unwrap();
-    writeln!(terminal, "{}", description).unwrap();
-}
-
 /// Makes `print_meta` work like `format!` :)
 macro_rules! print_meta(
     ($name:expr, $($arg:expr),+) => (
-        $crate::print_meta($name, format!("{}", $($arg),+));
+        println!("{:>12} {}", $name, $($arg),+);
     )
 );
 
