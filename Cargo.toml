@@ -3,17 +3,6 @@ name = "mutiny"
 version = "0.0.1"
 authors = ["Sam Clements <sam@borntyping.co.uk>"]
 
-[lib]
-name = "mutiny"
-
-[[bin]]
-name = "mutiny-memory"
-path = "src/bin/memory.rs"
-
-[[bin]]
-name = "mutiny-announce"
-path = "src/bin/announce.rs"
-
 [dependencies]
 getopts = "0.2"
 term = "0.1"

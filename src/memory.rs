@@ -1,16 +1,8 @@
-#![feature(core)]
-#![feature(io)]
-#![feature(std_misc)]
-
-extern crate mutiny;
-
 use std::old_io as io;
 use std::old_io::timer::Timer;
 use std::time::duration::Duration;
 
-fn main() {
-    mutiny::start("Consume memory and wait to be killed");
-
+pub fn start() {
     let mut vec = Vec::new();
     let mut timer = Timer::new().unwrap();
 
