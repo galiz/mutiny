@@ -4,7 +4,6 @@
 #![feature(io)]
 #![feature(path)]
 #![feature(std_misc)]
-#![feature(os)]
 
 extern crate getopts;
 extern crate term;
@@ -19,10 +18,6 @@ macro_rules! print_meta(
     )
 );
 
-fn args() -> Vec<String> {
-    std::env::args().map(|s| s.into_string().unwrap()).collect()
-}
-
 fn print_usage(program: String, options: getopts::Options) {
     let brief = options.short_usage(program.as_slice()) + " COMMAND";
     let usage = options.usage(brief.as_slice());
@@ -35,7 +30,7 @@ pub fn main() {
     options.optopt("p", "pidfile", "Set pidfile path", "PATH");
     options.optflag("h", "help", "Print this help menu");
 
-    let arguments = args();
+    let arguments: Vec<String> = std::env::args().collect();
     let matches = match options.parse(arguments.tail()) {
         Ok(matches) => matches,
         Err(error) => { panic!("{}", error); }
