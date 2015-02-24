@@ -1,8 +1,8 @@
 #![feature(collections)]
 #![feature(core)]
 #![feature(env)]
-#![feature(io)]
-#![feature(path)]
+#![feature(old_io)]
+#![feature(old_path)]
 #![feature(std_misc)]
 
 extern crate getopts;
