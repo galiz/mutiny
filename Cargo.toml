@@ -1,11 +1,9 @@
 [package]
 name = "mutiny"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["Sam Clements <sam@borntyping.co.uk>"]
 
 [dependencies]
-getopts = "0.2"
-term = "0.1"
-
-[dependencies.psutil]
-git = "https://github.com/borntyping/rust-psutil"
+getopts = "*"
+term = "*"
+psutil = "*"
