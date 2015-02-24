@@ -1,57 +1,44 @@
-#![feature(collections)]
-#![feature(core)]
+//! Some simple tools that can be used to test process monitoring systems
+
 #![feature(env)]
 #![feature(old_io)]
 #![feature(old_path)]
+#![feature(plugin)]
 #![feature(std_misc)]
+#![plugin(docopt_macros)]
 
-extern crate getopts;
-extern crate term;
+extern crate docopt;
+#[macro_use] extern crate log;
+extern crate simple_logger;
 extern crate psutil;
+extern crate "rustc-serialize" as rustc_serialize;
 
 mod memory;
 
-/// Makes `print_meta` work like `format!` :)
-macro_rules! print_meta(
-    ($name:expr, $($arg:expr),+) => (
-        println!("{:>12} {}", $name, $($arg),+);
-    )
-);
+docopt!(Args derive Debug, "
+Usage:  mutiny [options] memory
+        mutiny (--help | --version)
 
-fn print_usage(program: String, options: getopts::Options) {
-    let brief = options.short_usage(program.as_slice()) + " COMMAND";
-    let usage = options.usage(brief.as_slice());
-    print!("{}", usage);
-}
+Options:
+    -p <file>, --pidfile=<file>     A path to write a pidfile to.
+    -h, --help                      Show this message.
+", flag_pidfile: Option<String>);
 
 /// Announce some information about the current program, and create a pidfile
 pub fn main() {
-    let mut options = getopts::Options::new();
-    options.optopt("p", "pidfile", "Set pidfile path", "PATH");
-    options.optflag("h", "help", "Print this help menu");
+    let args: Args = Args::docopt().decode().unwrap_or_else(|e| e.exit());
 
-    let arguments: Vec<String> = std::env::args().collect();
-    let matches = match options.parse(arguments.tail()) {
-        Ok(matches) => matches,
-        Err(error) => { panic!("{}", error); }
-    };
+    simple_logger::init();
 
-    if matches.opt_present("h") || matches.free.len() < 1 {
-        print_usage(arguments[0].clone(), options);
-        return;
+    info!("Proccess PID is {}", psutil::getpid());
+
+    if let Some(pidfile) = args.flag_pidfile {
+        let path = std::env::current_dir().unwrap().join(&Path::new(pidfile));
+        psutil::pidfile::write_pidfile(&path).unwrap();
+        info!("Wrote PID to {}", path.display());
     }
 
-    // Create a pidfile
-    let path_arg = matches.opt_str("p").unwrap_or("mutiny.pid".to_string());
-    let path = std::env::current_dir().unwrap().join(&Path::new(path_arg));
-    psutil::pidfile::write_pidfile(&path).unwrap();
-
-    // Show the pidfile path and pid
-    print_meta!("Pidfile", path.display());
-    print_meta!("PID", psutil::getpid());
-
-    match matches.free[0].as_slice() {
-        "memory" => memory::start(),
-        _ => unreachable!()
+    if args.cmd_memory {
+        memory::start()
     }
 }
