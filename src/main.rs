@@ -1,8 +1,8 @@
 //! Some simple tools that can be used to test process monitoring systems
 
-#![feature(env)]
 #![feature(old_io)]
 #![feature(old_path)]
+#![feature(path)]
 #![feature(plugin)]
 #![feature(std_misc)]
 #![plugin(docopt_macros)]
