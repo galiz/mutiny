@@ -11,7 +11,7 @@ pub fn start() {
 
     for t in 0..10 {
         // Allocate memory
-        for i in 0..5000000 {
+        for i in 0..10000000 {
             vec.push(i);
         }
         vec.shrink_to_fit();
