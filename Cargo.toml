@@ -7,9 +7,9 @@ description = "Some simple tools that can be used to test process monitoring sys
 repository = "https://github.com/borntyping/mutiny"
 
 [dependencies]
-docopt = "^0.6.39"
-docopt_macros = "^0.6.39"
-log = "^0.2.4"
+docopt = "^0.6.50"
+docopt_macros = "^0.6.50"
+log = "^0.2.5"
 psutil = "^0.4.0"
-rustc-serialize = "^0.3.0"
+rustc-serialize = "^0.3.3"
 simple_logger = "^0.1.0"

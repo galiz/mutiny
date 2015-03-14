@@ -1,8 +1,5 @@
 //! Some simple tools that can be used to test process monitoring systems
 
-#![feature(old_io)]
-#![feature(old_path)]
-#![feature(path)]
 #![feature(plugin)]
 #![feature(std_misc)]
 #![plugin(docopt_macros)]
@@ -12,6 +9,8 @@ extern crate docopt;
 extern crate simple_logger;
 extern crate psutil;
 extern crate "rustc-serialize" as rustc_serialize;
+
+use std::path::Path;
 
 mod memory;
 
@@ -33,7 +32,7 @@ pub fn main() {
     info!("Proccess PID is {}", psutil::getpid());
 
     if let Some(pidfile) = args.flag_pidfile {
-        let path = std::env::current_dir().unwrap().join(&Path::new(pidfile));
+        let path = std::env::current_dir().unwrap().join(&Path::new(&pidfile));
         psutil::pidfile::write_pidfile(&path).unwrap();
         info!("Wrote PID to {}", path.display());
     }
