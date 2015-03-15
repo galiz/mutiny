@@ -1,6 +1,7 @@
 //! Some simple tools that can be used to test process monitoring systems
 
 #![feature(exit_status)]
+#![feature(net)]
 #![feature(old_io)]
 #![feature(plugin)]
 #![feature(std_misc)]
@@ -13,15 +14,18 @@ extern crate docopt;
 #[macro_use] extern crate log;
 extern crate simple_logger;
 extern crate psutil;
+extern crate riemann_client;
 extern crate "rustc-serialize" as rustc_serialize;
 
 use std::env::{get_exit_status,set_exit_status};
+use std::net::ToSocketAddrs;
 use std::old_io::timer::sleep;
 use std::path::Path;
 use std::time::duration::Duration;
 
 use psutil::getpid;
 use psutil::process::Process;
+use riemann_client::Client;
 
 docopt!(Args derive Debug, "
 Usage:  mutiny [options] cpu [--force]
@@ -33,72 +37,108 @@ Usage:  mutiny [options] cpu [--force]
 Subcommands:
     cpu [--force]                   Use CPU time. Requires --force.
     exit [code]                     Exit with [code]. Defaults to 1.
-    memory [bytes]                  Consume [bytes] memory. Defaults to 200Mb.
+    memory [bytes]                  Allocate [bytes] memory. Defaults to 200Mb.
     nothing                         Do absolutely nothing. Ignores --duration.
 
 Options:
+    --riemann-host=<host>           Hostname for the Riemann server to use.
+    --riemann-port=<port>           Port for the Riemann server [default: 5555].
     -d <secs>, --duration=<secs>    Time the command should take [default: 10].
     -p <file>, --pidfile=<file>     A path to write a pidfile to.
     -h, --help                      Show this message.
     -v, --version                   Show the program version.
 ",
+    flag_riemann_host: Option<String>,
+    flag_riemann_port: u16,
     flag_pidfile: Option<String>,
     flag_duration: i64,
     arg_code: Option<i32>,
     arg_bytes: Option<i64>
 );
 
-fn exit(code: i32, duration: Duration) {
-    set_exit_status(code);
-    info!("Will exit with code {} in {} seconds", code, duration.num_seconds());
-    sleep(duration);
-    warn!("Exiting with code {}", get_exit_status());
+struct Mutiny {
+    client: Option<Client>
 }
 
-fn nothing() {
-    info!("Doing absolutely nothing, forever.");
-    loop {
-        sleep(Duration::max_value());
+impl Mutiny {
+    fn new() -> Self {
+        info!("Proccess PID is {}", psutil::getpid());
+        Mutiny { client: None }
     }
-}
 
-fn memory(bytes: i64, duration: Duration) {
-    let mut vec: Vec<u8> = Vec::with_capacity(0);
-    let seconds = duration.num_seconds();
-    let bytes_per_second = bytes / seconds;
+    fn connect<A: ToSocketAddrs + ?Sized>(&mut self, addr: &A) {
+        self.client = Some(riemann_client::Client::connect(addr).unwrap());
+        info!("Connecting to Riemann at {}", addr.to_socket_addrs().unwrap().next().unwrap());
+    }
 
-    assert_eq!(bytes, bytes * std::mem::size_of::<u8>() as i64);
+    fn pidfile(&mut self, path: &Path) {
+        let path = std::env::current_dir().unwrap().join(path);
+        psutil::pidfile::write_pidfile(&path).unwrap();
+        info!("Wrote PID to {}", path.display());
+    }
 
-    info!("Consuming at least {}b over ~{} seconds ({}b bytes per second)",
-        bytes, duration.num_seconds(), bytes_per_second);
+    fn exit(&mut self, code: i32, duration: Duration) {
+        set_exit_status(code);
+        info!("Will exit with code {} in {} seconds",
+            code, duration.num_seconds());
+        sleep(duration);
+        warn!("Exiting with code {}", get_exit_status());
+    }
 
-    let before_alloc = Process::new(getpid()).unwrap().memory().unwrap().rss;
-    info!("Using {}b before allocation", before_alloc);
+    fn nothing(&mut self) {
+        info!("Doing absolutely nothing, forever.");
+        loop {
+            sleep(Duration::max_value());
+        }
+    }
 
-    for i in 0..seconds {
-        // This slows down the rate `Vec` reserves memory but doesn't avoid it
-        // automatically allocating more memory than it will actually need
-        vec.reserve_exact(bytes_per_second as usize);
+    fn memory(&mut self, bytes: i64, duration: Duration) {
+        let mut vec: Vec<u8> = Vec::with_capacity(0);
+        let seconds = duration.num_seconds();
+        let bytes_per_second = bytes / seconds;
 
-        // Allocate memory by pushing byte-size numbers into a vector
-        for _ in 0..bytes_per_second {
-            vec.push(0);
+        assert_eq!(bytes, bytes * std::mem::size_of::<u8>() as i64);
+
+        info!("Consuming at least {}b over ~{} seconds ({}b bytes per second)",
+            bytes, duration.num_seconds(), bytes_per_second);
+
+        let before_alloc = Process::new(getpid()).unwrap().memory().unwrap();
+        info!("Using {}b before allocation", before_alloc.rss);
+
+        for i in 0..seconds {
+            // This slows down the rate `Vec` reserves memory but doesn't avoid
+            // it automatically allocating more memory than it needs
+            vec.reserve_exact(bytes_per_second as usize);
+
+            // Allocate memory by pushing byte-size numbers into a vector
+            for _ in 0..bytes_per_second {
+                vec.push(0);
+            }
+
+            // Announce current memory usage
+            let memory = Process::new(getpid()).unwrap().memory().unwrap();
+            trace!("Tick {}: using {}b (vector should be using {}b)",
+                i, memory.rss, vec.len());
+
+            if let Some(ref mut client) = self.client {
+                let mut event = riemann_client::proto::Event::new();
+                event.set_service("mutiny".to_string());
+                event.set_host(riemann_client::utils::hostname().unwrap());
+                // This is currently broken
+                // event.set_metric_sint64(memory.rss as i64);
+                client.send_event(event).unwrap();
+            };
+
+            sleep(Duration::seconds(1));
         }
 
-        // Announce current memory usage
-        let memory = Process::new(getpid()).unwrap().memory().unwrap();
-        trace!("Tick {}: using {}b (vector should be using {}b)",
-            i, memory.rss, vec.len());
+        let after_alloc = Process::new(getpid()).unwrap().memory().unwrap();
+        info!("Using {}b after allocation (difference of {}b)",
+            after_alloc.rss, after_alloc.rss - before_alloc.rss);
 
-        sleep(Duration::seconds(1));
+        // Once memory is being used, do nothing instead of exiting
+        self.nothing();
     }
-
-    let after_alloc = Process::new(getpid()).unwrap().memory().unwrap().rss;
-    info!("Using {}b after allocation (difference of {}b)",
-        after_alloc, after_alloc - before_alloc);
-
-    // Once memory is being used, do nothing instead of exiting
-    nothing();
 }
 
 pub fn main() {
@@ -111,20 +151,22 @@ pub fn main() {
     }
 
     simple_logger::init();
-    info!("Proccess PID is {}", psutil::getpid());
 
-    if let Some(pidfile) = args.flag_pidfile {
-        // TODO: Move `current_dir().join()` into psutil
-        let path = std::env::current_dir().unwrap().join(&Path::new(&pidfile));
-        psutil::pidfile::write_pidfile(&path).unwrap();
-        info!("Wrote PID to {}", path.display());
+    let mut mutiny = Mutiny::new();
+
+    if let Some(host) = args.flag_riemann_host {
+        mutiny.connect(&(&host[..], args.flag_riemann_port));
+    }
+
+    if let Some(path) = args.flag_pidfile {
+        mutiny.pidfile(&Path::new(&path));
     }
 
     if args.cmd_exit {
-        exit(args.arg_code.unwrap_or(1), duration);
+        mutiny.exit(args.arg_code.unwrap_or(1), duration);
     } else if args.cmd_nothing {
-        nothing();
+        mutiny.nothing();
     } else if args.cmd_memory {
-        memory(args.arg_bytes.unwrap_or(200000000), duration);
+        mutiny.memory(args.arg_bytes.unwrap_or(200000000), duration);
     }
 }
