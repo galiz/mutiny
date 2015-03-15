@@ -103,7 +103,7 @@ impl Mutiny {
             bytes, duration.num_seconds(), bytes_per_second);
 
         let before_alloc = Process::new(getpid()).unwrap().memory().unwrap();
-        info!("Using {}b before allocation", before_alloc.rss);
+        info!("Using {}b before allocation", before_alloc.resident);
 
         for i in 0..seconds {
             // This slows down the rate `Vec` reserves memory but doesn't avoid
@@ -118,14 +118,14 @@ impl Mutiny {
             // Announce current memory usage
             let memory = Process::new(getpid()).unwrap().memory().unwrap();
             trace!("Tick {}: using {}b (vector should be using {}b)",
-                i, memory.rss, vec.len());
+                i, memory.resident, vec.len());
 
             if let Some(ref mut client) = self.client {
                 let mut event = riemann_client::proto::Event::new();
                 event.set_service("mutiny".to_string());
                 event.set_host(riemann_client::utils::hostname().unwrap());
                 // This is currently broken
-                // event.set_metric_sint64(memory.rss as i64);
+                // event.set_metric_sint64(memory.resident as i64);
                 client.send_event(event).unwrap();
             };
 
@@ -134,7 +134,7 @@ impl Mutiny {
 
         let after_alloc = Process::new(getpid()).unwrap().memory().unwrap();
         info!("Using {}b after allocation (difference of {}b)",
-            after_alloc.rss, after_alloc.rss - before_alloc.rss);
+            after_alloc.resident, after_alloc.resident - before_alloc.resident);
 
         // Once memory is being used, do nothing instead of exiting
         self.nothing();
