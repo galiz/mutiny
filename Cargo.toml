@@ -11,6 +11,9 @@ docopt = "^0.6.50"
 docopt_macros = "^0.6.50"
 log = "^0.2.5"
 psutil = "^0.7.0"
-riemann_client = "^0.2.0"
 rustc-serialize = "^0.3.3"
 simple_logger = "^0.1.0"
+
+[dependencies.riemann_client]
+git = "https://github.com/borntyping/rust-riemann_client.git"
+version = "^0.2.0"
