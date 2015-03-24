@@ -4,11 +4,11 @@ version = "0.2.0"
 dependencies = [
  "docopt 0.6.52 (registry+https://github.com/rust-lang/crates.io-index)",
  "docopt_macros 0.6.52 (registry+https://github.com/rust-lang/crates.io-index)",
- "log 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "psutil 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "riemann_client 0.2.2 (git+https://github.com/borntyping/rust-riemann_client.git)",
  "rustc-serialize 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "simple_logger 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "simple_logger 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -45,6 +45,14 @@ version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "log"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "protobuf"
 version = "0.0.9"
 source = "git+https://github.com/borntyping/rust-riemann_client.git#2e6a4e3b84af0e2928bf40c215917757cf7aeb79"
@@ -79,10 +87,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "simple_logger"
-version = "0.1.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "log 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

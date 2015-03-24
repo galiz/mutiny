@@ -149,7 +149,7 @@ pub fn main() {
         return;
     }
 
-    simple_logger::init();
+    simple_logger::init().unwrap();
 
     let mut mutiny = Mutiny::new();
 
