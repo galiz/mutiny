@@ -1,7 +1,6 @@
 //! Some simple tools that can be used to test process monitoring systems
 
 #![feature(exit_status)]
-#![feature(net)]
 #![feature(old_io)]
 #![feature(plugin)]
 #![feature(std_misc)]
