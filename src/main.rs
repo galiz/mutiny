@@ -14,7 +14,7 @@ extern crate docopt;
 extern crate simple_logger;
 extern crate psutil;
 extern crate riemann_client;
-extern crate "rustc-serialize" as rustc_serialize;
+extern crate rustc_serialize;
 
 use std::env::{get_exit_status,set_exit_status};
 use std::net::ToSocketAddrs;
