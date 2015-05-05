@@ -1,42 +1,42 @@
 [root]
 name = "mutiny"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
- "docopt 0.6.55 (registry+https://github.com/rust-lang/crates.io-index)",
- "docopt_macros 0.6.55 (registry+https://github.com/rust-lang/crates.io-index)",
+ "docopt 0.6.64 (registry+https://github.com/rust-lang/crates.io-index)",
+ "docopt_macros 0.6.64 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "psutil 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "riemann_client 0.3.0 (git+https://github.com/borntyping/rust-riemann_client.git)",
- "rustc-serialize 0.3.10 (registry+https://github.com/rust-lang/crates.io-index)",
- "simple_logger 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "psutil 0.8.4 (git+https://github.com/borntyping/rust-psutil.git)",
+ "riemann_client 0.3.1 (git+https://github.com/borntyping/rust-riemann_client.git)",
+ "rustc-serialize 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "simple_logger 0.3.1 (git+https://github.com/borntyping/rust-simple_logger.git)",
 ]
 
 [[package]]
 name = "docopt"
-version = "0.6.55"
+version = "0.6.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "libc 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "regex 0.1.24 (registry+https://github.com/rust-lang/crates.io-index)",
- "rustc-serialize 0.3.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex 0.1.30 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rustc-serialize 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "strsim 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "docopt_macros"
-version = "0.6.55"
+version = "0.6.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "docopt 0.6.55 (registry+https://github.com/rust-lang/crates.io-index)",
+ "docopt 0.6.64 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "gcc"
-version = "0.3.3"
+version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "libc"
-version = "0.1.4"
+version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -44,57 +44,62 @@ name = "log"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "libc 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "protobuf"
-version = "0.0.9"
-source = "git+https://github.com/borntyping/rust-protobuf.git#4015c2bccbe0aabc7d77f2d1626546ace61167bc"
+version = "0.0.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "psutil"
-version = "0.8.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+version = "0.8.4"
+source = "git+https://github.com/borntyping/rust-psutil.git#dcd7b1dd3dbd3190316102511ae4d6f12a83ead4"
 dependencies = [
- "libc 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "regex"
-version = "0.1.24"
+version = "0.1.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "riemann_client"
-version = "0.3.0"
-source = "git+https://github.com/borntyping/rust-riemann_client.git#bde6a363e8d26ed99d5d9cd521f2d06fdc6ab02d"
+version = "0.3.1"
+source = "git+https://github.com/borntyping/rust-riemann_client.git#93d133b1ae15a3ae6c8f592fd28b60c6337cc849"
 dependencies = [
- "libc 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "protobuf 0.0.9 (git+https://github.com/borntyping/rust-protobuf.git)",
+ "protobuf 0.0.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "rustc-serialize"
-version = "0.3.10"
+version = "0.3.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "simple_logger"
 version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+source = "git+https://github.com/borntyping/rust-simple_logger.git#ffbec480ab72757da1c5b45961bcf68ecda64867"
 dependencies = [
  "log 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "time 0.1.22 (registry+https://github.com/rust-lang/crates.io-index)",
+ "time 0.1.25 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
+name = "strsim"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "time"
-version = "0.1.22"
+version = "0.1.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "gcc 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gcc 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

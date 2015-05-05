@@ -1,7 +1,6 @@
 //! Some simple tools that can be used to test process monitoring systems
 
 #![feature(exit_status)]
-#![feature(old_io)]
 #![feature(plugin)]
 #![feature(std_misc)]
 #![plugin(docopt_macros)]
@@ -18,8 +17,8 @@ extern crate rustc_serialize;
 
 use std::env::{get_exit_status,set_exit_status};
 use std::net::ToSocketAddrs;
-use std::old_io::timer::sleep;
 use std::path::Path;
+use std::thread::sleep_ms;
 use std::time::duration::Duration;
 
 use psutil::getpid;
@@ -80,14 +79,14 @@ impl Mutiny {
         set_exit_status(code);
         info!("Will exit with code {} in {} seconds",
             code, duration.num_seconds());
-        sleep(duration);
+        sleep_ms(duration.num_milliseconds() as u32);
         warn!("Exiting with code {}", get_exit_status());
     }
 
     fn nothing(&mut self) {
         info!("Doing absolutely nothing, forever.");
         loop {
-            sleep(Duration::max_value());
+            sleep_ms(std::u32::MAX);
         }
     }
 
@@ -128,7 +127,7 @@ impl Mutiny {
                 client.send_event(event).unwrap();
             };
 
-            sleep(Duration::seconds(1));
+            sleep_ms(1000);
         }
 
         let after_alloc = Process::new(getpid()).unwrap().memory().unwrap();

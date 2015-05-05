@@ -1,6 +1,6 @@
 [package]
 name = "mutiny"
-version = "0.2.1"
+version = "0.3.0"
 license = "MIT"
 authors = ["Sam Clements <sam@borntyping.co.uk>"]
 description = "Some simple tools that can be used to test process monitoring systems"
@@ -10,10 +10,16 @@ repository = "https://github.com/borntyping/mutiny"
 docopt = "^0.6.55"
 docopt_macros = "^0.6.55"
 log = "^0.3.1"
-psutil = "^0.8.2"
 rustc-serialize = "^0.3.10"
-simple_logger = "^0.3.1"
+
+[dependencies.psutil]
+git = "https://github.com/borntyping/rust-psutil.git"
+psutil = "^0.8.2"
 
 [dependencies.riemann_client]
 git = "https://github.com/borntyping/rust-riemann_client.git"
 version = "^0.3.0"
+
+[dependencies.simple_logger]
+git = "https://github.com/borntyping/rust-simple_logger.git"
+simple_logger = "^0.3.1"
